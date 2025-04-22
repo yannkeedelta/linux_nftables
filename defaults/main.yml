@@ -1,3 +1,13 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # defaults file for ansible/roles/linux_nftables
+
+lx_nftalbes_established: True
+
+lx_nftables_input_log_prefix: 'Denined input: '
+lx_nftables_output_log_prefix: 'Denined output: '
+lx_nftables_forward_log_prefix: 'Denined forward: '
+
+lx_nftables_input_policy: 'drop'
+lx_nftables_output_policy: 'drop'
+lx_nftables_forward_policy: 'drop'

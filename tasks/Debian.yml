@@ -1,16 +1,11 @@
 ---
-- name: 'Ensure nftalbe is install'
-  ansible.builtin.apt:
-    name: 'nftables'
-    state: 'present'
-    update_cache: True
-  notify: "Restart nftables"
+
 
 - name: "Push nftalbes configuration file"
   ansible.builtin.template:
     src: "{{ role_path }}/templates/nftables.j2"
-    dest: "/tmp/nftables.test"
-    mode: 0644
+    dest: "/etc/nftables.conf"
+    mode: 0755
     group: 'root'
     owner: 'root'
     lstrip_blocks: true

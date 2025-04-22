@@ -11,11 +11,16 @@ Requirements
 Role Variables
 --------------
 
-| Nom de la variable | Obligatoire | Type       | Valeur par defaut | Description                                        |
-|--------------------|-------------|------------|-------------------|----------------------------------------------------|
-| lx_nftables_input  | false       | list[dict] |                   | Une list de règles pour les paquets entrants       |
-| lx_nftables_output | false       | list[dict] |                   | Une list de règles pour les paquets sortants       |
-| lx_nftables_forwrd | false       | list[dict] |                   | Une list de règles pour les paquets qui transitent |
+| Nom de la variable            | Obligatoire | Type       | Valeur par defaut | Description                                           |
+|-------------------------------|-------------|------------|-------------------|-------------------------------------------------------|
+| lx_nftalbes_established       | false       | bool       | True              | Autoriser les réponses à des connexions déjà initiées |
+| lx_nftables_input_log_prefix  | false       | str        | Denied input:     | Prefix de lof pour les paquets entrants               |
+| lx_nftables_input_policy      | false       | str        | drop              | Règle pour les paquets entrants                       |
+| lx_nftables_input             | false       | list[dict] |                   | Une liste de règles pour les paquets entrants         |
+| lx_nftables_output_policy     | false       | str        | drop              | Règle pour les paquets sortants                       |
+| lx_nftables_output            | false       | list[dict] |                   | Une liste de règles pour les paquets sortants         |
+| lx_nftables_forward_policy    | false       | str        | drop              | Règle pour les paquets en transitent                  |
+| lx_nftables_forwrd            | false       | list[dict] |                   | Une liste de règles pour les paquets qui transitent   |
 
 
 Example Playbook

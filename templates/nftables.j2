@@ -5,19 +5,39 @@ flush ruleset
 table inet filter {
   chain input {
     type filter hook input priority 0;
-    policy {{ nft_policy_input | default('drop') }};
-    iifname "lo" accept
-    ct state established,related accept
+    policy {{ lx_nftables_input_policy }};
+    {% if lx_nftalbes_established | bool %}
+    ct state established,related accept;
+    {% endif %}
+    {% for rule in lx_nftables_input %}
+        {% if rule.proto is string %}
+    {{ rule.proto }} dport { {{ rule.dport | join(', ') }} } {% if rule.iif is defined %} iifname "{{ rule.iif }}"{% endif %}{% if rule.ip_source is defined %} ip saddr {{ rule.ip_source }}{% endif %} ct state new accept {% if rule.comment is defined %}comment "{{ rule.comment }}"{% endif %};
+        {% else %}
+    meta l4proto { {{ rule.proto | join(', ') }} } th dport { {{ rule.dport | join(', ') }} } {% if rule.iif is defined %} iifname "{{ rule.iif }}"{% endif %}{% if rule.ip_source is defined %} ip saddr {{ rule.ip_source }}{% endif %} ct state new accept {% if rule.comment is defined %}comment "{{ rule.comment }}"{% endif %};
+        {% endif %}
+    {% endfor %}
+    log prefix "{{ lx_nftables_input_log_prefix }}";
   }
 
   chain forward {
     type filter hook forward priority 0;
-    policy {{ nft_policy_forward | default('drop') }};
+    policy {{ lx_nftables_forward_policy }};
+    log prefix "{{ lx_nftables_forward_log_prefix }}";
   }
 
   chain output {
     type filter hook output priority 0;
-    policy {{ nft_policy_output | default('drop') }};
-    oifname "lo" accept
+    policy {{ lx_nftables_output_policy }};
+    {% if lx_nftalbes_established | bool %}
+    ct state established,related accept;
+    {% endif %}
+    {% for rule in lx_nftables_output %}
+        {% if rule.proto is string %}
+    {{ rule.proto }} dport { {{ rule.dport | join(', ') }} } {% if rule.iif is defined %} iifname "{{ rule.iif }}"{% endif %}{% if rule.ip_source is defined %} ip saddr {{ rule.ip_source }}{% endif %} ct state new accept {% if rule.comment is defined %}comment "{{ rule.comment }}"{% endif %};
+        {% else %}
+    meta l4proto { {{ rule.proto | join(', ') }} } th dport { {{ rule.dport | join(', ') }} } {% if rule.iif is defined %} iifname "{{ rule.iif }}"{% endif %}{% if rule.ip_source is defined %} ip saddr {{ rule.ip_source }}{% endif %} ct state new accept {% if rule.comment is defined %}comment "{{ rule.comment }}"{% endif %};
+        {% endif %}
+    {% endfor %}
+    log prefix "{{ lx_nftables_output_log_prefix }}";
   }
 }
