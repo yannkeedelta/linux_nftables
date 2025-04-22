@@ -1,0 +1,23 @@
+#!/usr/sbin/nft -f
+
+flush ruleset
+
+table inet filter {
+  chain input {
+    type filter hook input priority 0;
+    policy {{ nft_policy_input | default('drop') }};
+    iifname "lo" accept
+    ct state established,related accept
+  }
+
+  chain forward {
+    type filter hook forward priority 0;
+    policy {{ nft_policy_forward | default('drop') }};
+  }
+
+  chain output {
+    type filter hook output priority 0;
+    policy {{ nft_policy_output | default('drop') }};
+    oifname "lo" accept
+  }
+}
